@@ -1,6 +1,6 @@
 #pizza order program
 #olivia goodman 15/6/20
-#version 2 - getting input for the pizza order
+#version 3 - getting input for multiple pizzas and calculating relevant price
 
 #menu lists - storing the pizzas the user can choose from
 regular_menu = [["Margherita", "Fresh tomato, mozzarella, fresh basil, parmesan", 1], ["Kiwi", "Bacon, egg, mozzarella", 2], ["Garlic", "Mozzarella, garlic", 3], ["Cheese", "Mozzarella, oregano", 4], ["Hawaiian", "Ham, pineapple, mozzarella", 5], ["Mediterranean (vegan)", "Lebanese herbs, olive oil, fresh tomatoes, olives, onion", 6]]
@@ -11,21 +11,22 @@ price = 0
 #everything the user orders will get added to this list
 order = []
 
-#outputting the menus
-print("Regular Menu ($8 each):")
-for item in regular_menu:
-    print("{} (ID: {}) - {}".format(item[0], item[2], item[1]))
-print()
-print("Gourmet Menu ($15 each):")
-for item in gourmet_menu:
-    print("{} (ID: {}) - {}".format(item[0], item[2], item[1]))
-
-#input of the user's order
-pizza_order = int(input("Enter the ID of the pizza you want to order: "))
-order.append(pizza_order)
-if pizza_order < 7:
-    price += 8
-else:
-    price += 15
-print(price)
-print(pizza_order)
+pizza_amount = int(input("How many pizzas would you like to order? "))
+for pizza in range(pizza_amount):
+    #outputting the menus
+    print("Regular Menu ($8 each):")
+    for item in regular_menu:
+        print("{} (ID: {}) - {}".format(item[0], item[2], item[1]))
+    print()
+    print("Gourmet Menu ($15 each):")
+    for item in gourmet_menu:
+        print("{} (ID: {}) - {}".format(item[0], item[2], item[1]))
+    #input of the user's order
+    pizza_order = int(input("Enter the ID of the pizza you want to order: "))
+    order.append(pizza_order)
+    if pizza_order < 7:
+        price += 8
+    else:
+        price += 15
+    print("Total cost is: ${:.2f}".format(price))
+print(order)
