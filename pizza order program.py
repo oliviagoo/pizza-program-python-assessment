@@ -1,6 +1,6 @@
 #pizza order program
-#olivia goodman 16/6/20
-#version 4 - trying a menu based input method
+#olivia goodman 17/6/20
+#version 5 - giving the user the stuffed crust option
 
 #this function outputs the menu
 def output_menu():
@@ -24,22 +24,43 @@ def order_pizza(price):
     else:
         price += 15
     print()
+    stuff_crust.append(stuffed_crust(price))
     return price
+
+def stuffed_crust(price):
+    answer = input("Would you like to add stuffed crust for $3? (Y or N?) ").lower().strip()
+    if answer == "y":
+        price += 3
+    print(answer)
+    return answer
+    
 
 #this function outputs what the user has ordered so far, and the total price
 def output_order(price):
     print("Your order: ")
-    for pizza in order:
-        if pizza < gourmet_menu[0][2]:
-            for option in regular_menu:
-                if option[2] == pizza:
-                    print("{}) {}".format(order.index(pizza) + 1, option[0]))
-                    break
+    for pizza in range(len(order)):
+        if stuff_crust[pizza] == "y":
+            if order[pizza] < gourmet_menu[0][2]:
+                for option in regular_menu:
+                    if option[2] == order[pizza]:
+                        print("{}) {} with stuffed crust".format(pizza + 1, option[0]))
+                        break
+            else:
+                for option in gourmet_menu:
+                    if option[2] == order[pizza]:
+                        print("{}) {} with stuffed crust".format(pizza + 1, option[0]))
+                        break
         else:
-            for option in gourmet_menu:
-                if option[2] == pizza:
-                    print("{}) {}".format(order.index(pizza) + 1, option[0]))
-                    break
+            if order[pizza] < gourmet_menu[0][2]:  
+                for option in regular_menu:
+                    if option[2] == order[pizza]:
+                        print("{}) {}".format(pizza + 1, option[0]))
+                        break
+            else:
+                for option in gourmet_menu:   
+                    if option[2] == order[pizza]:
+                        print("{}) {}".format(pizza + 1, option[0]))
+                        break
     print("Total price: ${:.2f}".format(price))
     print()
 
@@ -66,6 +87,7 @@ gourmet_menu = [["Meat", "Bacon, pancetta, ham, onion, pepperoni, mozzarella", 7
 price = 0
 #everything the user orders will get added to this list
 order = []
+stuff_crust = []
 
 price = order_input(price)
 output_order(price)
