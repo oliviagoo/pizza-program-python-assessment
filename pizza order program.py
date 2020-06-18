@@ -1,6 +1,16 @@
 #pizza order program
-#olivia goodman 17/6/20
-#version 5 - giving the user the stuffed crust option
+#olivia goodman 18/6/20
+#version 6 - adding the delivery option
+
+#this function asks the user whether they want delivery or pickup
+def delivery(price):
+    answer = input("Would you like to get your pizza delivered (D), or pick it up? (P) ").lower().strip()
+    if answer == "d":
+        price += 8
+        address = input("What is your delivery address? ")
+        return answer, address, price
+    else:
+        return answer, "n/a", price
 
 #this function outputs the menu
 def output_menu():
@@ -24,17 +34,18 @@ def order_pizza(price):
     else:
         price += 15
     print()
-    stuff_crust.append(stuffed_crust(price))
+    answer, price = stuffed_crust(price)
+    stuff_crust.append(answer)
     return price
 
+#this function asks if the user wants stuffed crust
 def stuffed_crust(price):
     answer = input("Would you like to add stuffed crust for $3? (Y or N?) ").lower().strip()
     if answer == "y":
         price += 3
     print(answer)
-    return answer
+    return answer, price
     
-
 #this function outputs what the user has ordered so far, and the total price
 def output_order(price):
     print("Your order: ")
@@ -80,6 +91,7 @@ def order_input(price):
     return price
         
 #main routine
+
 #menu lists - storing the pizzas the user can choose from
 regular_menu = [["Margherita", "Fresh tomato, mozzarella, fresh basil, parmesan", 1], ["Kiwi", "Bacon, egg, mozzarella", 2], ["Garlic", "Mozzarella, garlic", 3], ["Cheese", "Mozzarella, oregano", 4], ["Hawaiian", "Ham, pineapple, mozzarella", 5], ["Mediterranean (vegan)", "Lebanese herbs, olive oil, fresh tomatoes, olives, onion", 6]]
 gourmet_menu = [["Meat", "Bacon, pancetta, ham, onion, pepperoni, mozzarella", 7], ["Chicken Cranberry", "Smoked chicken, cranberry, camembert mozzarella", 8], ["Satay Chicken", "Smoked chic, onions, capsicum, pine nuts, satay sauce, mozzarella Chilli flakes and dried basil", 9], ["Big BBQ Bacon", "Smoky Bacon served on our classic marinara tomato sauce, heaped with mozzarella, topped off with a sweet and tangy BBQ drizzle", 10], ["Veggie", "Sweet red onion, mushroom, red capsicum & melting mozzarella with drizzles of our tangy roast capsicum drizzle, finished with a dash of oregano", 11], ["Meatlovers", "Spicy pepperoni, Italian sausage, succulent ham, seasoned ground beef, and crispy bacon all piled onto classic marinara sauce and finished with cheesy mozzarella and a drizzle of BBQ sauce.", 12]]
@@ -89,5 +101,6 @@ price = 0
 order = []
 stuff_crust = []
 
+order_type, address, price = delivery(price)
 price = order_input(price)
 output_order(price)
