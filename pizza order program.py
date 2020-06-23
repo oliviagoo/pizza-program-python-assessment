@@ -1,10 +1,11 @@
 #pizza order program
-#olivia goodman 21/6/20
-#version 7 - adding extra details - confirmation, name
+#olivia goodman 23/6/20
+#version 8 - error handling for the boundaries
 
 #this function confirms the order and finishes the program with a final output
 def confirm(order, stuff_crust, price, order_type, address, name):
     print("Thank you for your order! Please confirm that the following details are correct.")
+    #confirming the pizza details
     while True:
         output_order(price, order, stuff_crust)
         correct = input("Is this what you would like to order? (Y or N) ").strip().lower()
@@ -18,6 +19,7 @@ def confirm(order, stuff_crust, price, order_type, address, name):
                 price, order, stuff_crust = order_input(price)
         else: break
     print()
+    #confirming the delivery details
     while True:
         delivery_output(order_type, address, name)
         correct = input("Is this correct? (Y or N) ").strip().lower()
@@ -28,6 +30,7 @@ def confirm(order, stuff_crust, price, order_type, address, name):
                     price -= 8
                 order_type, address, price, name = delivery(price)
         else: break
+    #final output and goodbye
     print()
     print("Final order:")
     delivery_output(order_type, address, name)
@@ -70,15 +73,25 @@ def output_menu():
 
 #this function orders a pizza
 def order_pizza(price, order, stuff_crust):
+    #the restriction on how many pizzas they can order
+    PIZZA_RESTRICTION = 3
     pizza_order = int(input("Enter the ID of the pizza you want to order: "))
-    order.append(pizza_order)
-    if pizza_order < gourmet_menu[0][2]:
-        price += 8
+    #if they've already ordered three pizzas
+    if len(order) < PIZZA_RESTRICTION:
+        #if they're ordering an id lower than one and higher than the highest value
+        if pizza_order > 0 and pizza_order <= gourmet_menu[-1][2]:
+            order.append(pizza_order)
+            if pizza_order < gourmet_menu[0][2]:
+                price += 8
+            else:
+                price += 15
+            print()
+            answer, price = stuffed_crust(price, stuff_crust)
+            stuff_crust.append(answer)
+        else:
+            print("Please enter a pizza ID that exists.")
     else:
-        price += 15
-    print()
-    answer, price = stuffed_crust(price, stuff_crust)
-    stuff_crust.append(answer)
+        print("Unfortunately, due to the Covid-19 pandemic, you can only order a maximum of three pizzas.")
     return price, order
 
 #this function asks if the user wants stuffed crust
@@ -134,7 +147,9 @@ def order_input(price):
         elif selection == "o":
             output_order(price, order, stuff_crust)
         else:
-            break
+            if len(order) > 0:
+                break
+            else: print("You have to order at least one pizza")
     return price, order, stuff_crust
         
 #main routine
