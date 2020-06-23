@@ -1,6 +1,26 @@
 #pizza order program
 #olivia goodman 23/6/20
-#version 8 - error handling for the boundaries
+#version 9 - error handling for exceptional inputs
+
+#this function forces the user to enter a whole number
+def force_int(message):
+    while True:
+        try:
+            answer = int(input(message))
+            break
+        except ValueError:
+            print("Please enter a whole number.")
+    return answer
+
+#this function forces a yes or no input from the user
+def force_yn(message):
+    while True:
+        answer = input(message).strip().lower()
+        if answer == "y" or answer == "n":
+            break
+        else:
+            print("Please enter Y for yes or N for no")
+    return answer
 
 #this function confirms the order and finishes the program with a final output
 def confirm(order, stuff_crust, price, order_type, address, name):
@@ -8,9 +28,9 @@ def confirm(order, stuff_crust, price, order_type, address, name):
     #confirming the pizza details
     while True:
         output_order(price, order, stuff_crust)
-        correct = input("Is this what you would like to order? (Y or N) ").strip().lower()
+        correct = force_yn("Is this what you would like to order? (Y or N) ")
         if correct == "n":
-            reorder = input("Are you sure you want to redo your order? (Y or N) ")
+            reorder = force_yn("Are you sure you want to redo your order? (Y or N) ")
             if reorder == "y":
                 if order_type == "d":
                     price = 8
@@ -22,9 +42,9 @@ def confirm(order, stuff_crust, price, order_type, address, name):
     #confirming the delivery details
     while True:
         delivery_output(order_type, address, name)
-        correct = input("Is this correct? (Y or N) ").strip().lower()
+        correct = force_yn("Is this correct? (Y or N) ")
         if correct == "n":
-            reorder = input("Are you sure you want to change your order details? (Y or N) ")
+            reorder = force_yn("Are you sure you want to change your order details? (Y or N) ")
             if reorder == "y":
                 if order_type == "d":
                     price -= 8
@@ -50,13 +70,16 @@ def delivery_output(order_type, address, name):
 #this function asks the user whether they want delivery or pickup
 def delivery(price):
     name = input("What is your name? ")
-    answer = input("Would you like to get your pizza delivered (D), or pick it up? (P) ").lower().strip()
-    if answer == "d":
-        price += 8
-        address = input("What is your delivery address? ")
-        return answer, address, price, name
-    else:
-        return answer, "n/a", price, name
+    while True:
+        answer = input("Would you like to get your pizza delivered (D), or pick it up? (P) ").lower().strip()
+        if answer == "d":
+            price += 8
+            address = input("What is your delivery address? ")
+            return answer, address, price, name
+        elif answer == "p":
+            return answer, "n/a", price, name
+        else:
+            print("Please enter D for delivery or P for pick-up")
 
 #this function outputs the menu
 def output_menu():
@@ -75,28 +98,31 @@ def output_menu():
 def order_pizza(price, order, stuff_crust):
     #the restriction on how many pizzas they can order
     PIZZA_RESTRICTION = 3
-    pizza_order = int(input("Enter the ID of the pizza you want to order: "))
-    #if they've already ordered three pizzas
-    if len(order) < PIZZA_RESTRICTION:
-        #if they're ordering an id lower than one and higher than the highest value
-        if pizza_order > 0 and pizza_order <= gourmet_menu[-1][2]:
-            order.append(pizza_order)
-            if pizza_order < gourmet_menu[0][2]:
-                price += 8
+    while True:
+        pizza_order = force_int("Enter the ID of the pizza you want to order: ")
+        #if they've already ordered three pizzas
+        if len(order) < PIZZA_RESTRICTION:
+            #if they're ordering an id lower than one and higher than the highest value
+            if pizza_order > 0 and pizza_order <= gourmet_menu[-1][2]:
+                order.append(pizza_order)
+                if pizza_order < gourmet_menu[0][2]:
+                    price += 8
+                else:
+                    price += 15
+                print()
+                answer, price = stuffed_crust(price, stuff_crust)
+                stuff_crust.append(answer)
+                break
             else:
-                price += 15
-            print()
-            answer, price = stuffed_crust(price, stuff_crust)
-            stuff_crust.append(answer)
+                print("Please enter a pizza ID that exists.")
         else:
-            print("Please enter a pizza ID that exists.")
-    else:
-        print("Unfortunately, due to the Covid-19 pandemic, you can only order a maximum of three pizzas.")
+            print("Unfortunately, due to the Covid-19 pandemic, you can only order a maximum of three pizzas.")
+            break
     return price, order
 
 #this function asks if the user wants stuffed crust
 def stuffed_crust(price, stuff_crust):
-    answer = input("Would you like to add stuffed crust for $3? (Y or N?) ").lower().strip()
+    answer = force_yn("Would you like to add stuffed crust for $3? (Y or N?) ")
     if answer == "y":
         price += 3
     print(answer)
@@ -146,10 +172,12 @@ def order_input(price):
             price, order = order_pizza(price, order, stuff_crust)
         elif selection == "o":
             output_order(price, order, stuff_crust)
-        else:
+        elif selection == "q":
             if len(order) > 0:
                 break
             else: print("You have to order at least one pizza")
+        else:
+            print("Please enter one of the options provided.")
     return price, order, stuff_crust
         
 #main routine
