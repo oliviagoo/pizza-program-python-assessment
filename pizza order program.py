@@ -1,11 +1,6 @@
 #pizza order program
-#olivia goodman 26/6/20
-#version 10 - cleaning up code and getting feedback
-
-def welcome():
-    print("Welcome to Heavenly Pizza's online ordering program!")
-    print("We will guide you through the process as you decide whether to pick up your piping hot pizza or have it delivered directly to your doorstep, and choose from our delicioius menu of pizzas.")
-    print()
+#olivia goodman 23/6/20
+#version 9 - error handling for exceptional inputs
 
 #this function forces the user to enter a whole number
 def force_int(message):
@@ -36,7 +31,6 @@ def confirm(order, stuff_crust, price, order_type, address, name):
         correct = force_yn("Is this what you would like to order? (Y or N) ")
         if correct == "n":
             reorder = force_yn("Are you sure you want to redo your order? (Y or N) ")
-            print()
             if reorder == "y":
                 if order_type == "d":
                     price = 8
@@ -51,7 +45,6 @@ def confirm(order, stuff_crust, price, order_type, address, name):
         correct = force_yn("Is this correct? (Y or N) ")
         if correct == "n":
             reorder = force_yn("Are you sure you want to change your order details? (Y or N) ")
-            print()
             if reorder == "y":
                 if order_type == "d":
                     price -= 8
@@ -73,7 +66,6 @@ def delivery_output(order_type, address, name):
     else:
         print("Order Pickup")
         print("Picked up by: {}".format(name.title()))
-    print()
 
 #this function asks the user whether they want delivery or pickup
 def delivery(price):
@@ -83,10 +75,8 @@ def delivery(price):
         if answer == "d":
             price += 8
             address = input("What is your delivery address? ")
-            print()
             return answer, address, price, name
         elif answer == "p":
-            print()
             return answer, "n/a", price, name
         else:
             print("Please enter D for delivery or P for pick-up")
@@ -135,7 +125,7 @@ def stuffed_crust(price, stuff_crust):
     answer = force_yn("Would you like to add stuffed crust for $3? (Y or N?) ")
     if answer == "y":
         price += 3
-    print()
+    print(answer)
     return answer, price
     
 #this function outputs what the user has ordered so far, and the total price
@@ -199,7 +189,6 @@ gourmet_menu = [["Meat", "Bacon, pancetta, ham, onion, pepperoni, mozzarella", 7
 #setting up price variable - will get added to as price increases
 price = 0
 
-welcome()
 order_type, address, price, name = delivery(price)
 price, order, stuff_crust = order_input(price)
 confirm(order, stuff_crust, price, order_type, address, name)
